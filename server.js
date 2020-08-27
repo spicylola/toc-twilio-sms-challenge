@@ -3,8 +3,8 @@ const app = express();
 var bodyParser = require("body-parser");
 
 const client = require("twilio")(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
+    "AC137e1ef9107a509981cad839ff8dc717",
+  "402cad46129848de9082e6dd03fb7e60"
 );
 const port = process.env.PORT || 8080;
 
@@ -25,12 +25,21 @@ app.post("/process_form", function (req, res) {
   phone_number = req.body.phone_number;
   client.messages
     .create({
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: phone_number,
+      from: +19388888249,
+      to: +18502074868,
       body: "You just sent an SMS from Node.js using Twilio!",
     })
     .then((message) => console.log(message.sid));
   res.sendStatus(200);
+});
+
+app.post('/sms', (req, res) => {
+    const twiml = new MessagingResponse();
+
+    twiml.message(req.body);
+
+    res.writeHead(200, {'Content-Type': 'text/xml'});
+    res.end(twiml.toString());
 });
 
 var serve_app = app.listen(port, function () {
